@@ -7,24 +7,27 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: espressif/idf:release-v6.1
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Build waveshare-esp32-s3-touch-lcd-3.49
-        uses: espressif/esp-idf-ci-action@v1
-        with:
-          esp_idf_version: v5.5.2
-          target: esp32s3
-          commands: |
-            python scripts/release.py waveshare/esp32-s3-touch-lcd-3.49
+      - name: Unmute Compiler Errors
+        run: |
+          sed -i 's/capture_output=True//g' scripts/release.py || true
+          sed -i 's/stdout=subprocess.PIPE//g' scripts/release.py || true
+          sed -i 's/stderr=subprocess.PIPE//g' scripts/release.py || true
+
+      - name: Compile Custom Board
+        run: |
+          . $IDF_PATH/export.sh
+          python3 scripts/release.py waveshare/esp32-s3-touch-lcd-3.49
 
       - name: Upload Compiled Firmware (.bin)
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: TT08-Custom-Firmware
-          path: |
-            releases/*.zip
-            build/merged-binary.bin
+          path: releases/*.zip
