@@ -1,0 +1,30 @@
+name: Build TT-08 Firmware
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build waveshare-esp32-s3-touch-lcd-3.49
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.5.2
+          target: esp32s3
+          commands: |
+            python scripts/release.py waveshare/esp32-s3-touch-lcd-3.49
+
+      - name: Upload Compiled Firmware (.bin)
+        uses: actions/upload-artifact@v4
+        with:
+          name: TT08-Custom-Firmware
+          path: |
+            releases/*.zip
+            build/merged-binary.bin
