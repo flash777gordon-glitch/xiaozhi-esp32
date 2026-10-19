@@ -14,19 +14,12 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Unmute Compiler Errors
-        run: |
-          sed -i 's/capture_output=True/capture_output=False/g' scripts/release.py || true
-          sed -i 's/stdout=subprocess.PIPE/stdout=None/g' scripts/release.py || true
-          sed -i 's/stderr=subprocess.PIPE/stderr=None/g' scripts/release.py || true
-
       - name: Compile Custom Board
         run: |
           . $IDF_PATH/export.sh
           python3 scripts/release.py publish waveshare/esp32-s3-touch-lcd-3.49
 
       - name: Upload Compiled Firmware (.bin)
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: TT08-Custom-Firmware
