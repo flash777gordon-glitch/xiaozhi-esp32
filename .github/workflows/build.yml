@@ -23,7 +23,7 @@ jobs:
       - name: Compile Custom Board
         run: |
           . $IDF_PATH/export.sh
-          python3 scripts/release.py waveshare/esp32-s3-touch-lcd-3.49
+          python3 scripts/release.py publish waveshare/esp32-s3-touch-lcd-3.49
 
       - name: Upload Compiled Firmware (.bin)
         if: success()
