@@ -28,3 +28,4 @@ jobs:
         with:
           name: TT08-Custom-Firmware
           path: build/merged-binary.bin
+          path: build/merged-binary.bin
