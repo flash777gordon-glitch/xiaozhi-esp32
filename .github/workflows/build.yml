@@ -20,13 +20,11 @@ jobs:
           export BOARD_TYPE=waveshare/esp32-s3-touch-lcd-3.49
           idf.py set-target esp32s3
           idf.py build
+          esptool.py --chip esp32s3 merge_bin -o build/merged-binary.bin @build/flash_args
 
       - name: Upload Compiled Firmware
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: TT08-Custom-Firmware
-          path: |
-            build/*.bin
-            build/bootloader/*.bin
-            build/partition_table/*.bin
+          path: build/merged-binary.bin
