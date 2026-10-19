@@ -17,13 +17,16 @@ jobs:
       - name: Compile Custom Board
         run: |
           . $IDF_PATH/export.sh
-          python3 scripts/release.py prepare waveshare/esp32-s3-touch-lcd-3.49
+          export BOARD_TYPE=waveshare/esp32-s3-touch-lcd-3.49
+          idf.py set-target esp32s3
+          idf.py build
 
-      - name: Upload Compiled Firmware (.bin)
+      - name: Upload Compiled Firmware
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: TT08-Custom-Firmware
           path: |
-            build/merged-binary.bin
-            releases/*.zip
+            build/*.bin
+            build/bootloader/*.bin
+            build/partition_table/*.bin
